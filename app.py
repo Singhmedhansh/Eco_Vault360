@@ -1,7 +1,8 @@
-from flask import Flask, render_template, jsonify, request
+﻿from flask import Flask, jsonify, request
 from datetime import datetime
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.', static_url_path='')
 
 VALUE_PER_TONNE_INR = 6250000
 AI_ACCURACY = 0.95
@@ -21,7 +22,18 @@ app_state = {
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    with open('index.html', 'r', encoding='utf-8') as f:
+        return f.read()
+
+@app.route('/style.css')
+def style():
+    with open('style.css', 'r', encoding='utf-8') as f:
+        return f.read(), 200, {'Content-Type': 'text/css'}
+
+@app.route('/script.js')
+def script():
+    with open('script.js', 'r', encoding='utf-8') as f:
+        return f.read(), 200, {'Content-Type': 'application/javascript'}
 
 @app.route('/api/state', methods=['GET'])
 def get_state():
@@ -72,6 +84,16 @@ def classify_item():
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    print("Eco-Vault 360 Flask Server Started")
-    print(f"Access at: http://localhost:5000")
-    app.run(debug=True, host='localhost', port=5000)
+    print("=" * 70)
+    print(" Eco-Vault 360 - Digital Twin for E-Waste Triage")
+    print("=" * 70)
+    print("\n Flask server starting...")
+    print("\n Access from THIS device:")
+    print("   http://localhost:5000")
+    print("\n Access from OTHER devices on your network:")
+    print("   http://<your-machine-ip>:5000")
+    print("   (Find your IP: ipconfig on Windows, ifconfig on Mac/Linux)")
+    print("\n Example: http://192.168.1.100:5000")
+    print("=" * 70 + "\n")
+    
+    app.run(debug=True, host='0.0.0.0', port=5000)
