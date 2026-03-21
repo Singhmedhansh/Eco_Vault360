@@ -1,0 +1,4 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "compile-hero.disable-compile-files-on-did-save-code": false
+}
